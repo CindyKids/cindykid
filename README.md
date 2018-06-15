@@ -10,4 +10,6 @@ recorded from 2018-4-29
 
 **add new topic day by day**
 
+make sure this:`export PATH=.:$PATH`
 
+command:`ndr -f "file" -p "person" -d "do-what-list"`

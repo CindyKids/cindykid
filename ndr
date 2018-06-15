@@ -1,0 +1,77 @@
+#!/bin/bash
+
+all=$@
+
+addperson(){
+    echo "- $@" >> $file
+}
+
+adddo(){
+    echo "    - $@" >> $file
+}
+
+
+file_exist=f
+for a in $all;do
+    if [ $a = "-f" ];then
+        file_exist=t
+        continue
+    fi
+    if [ "$file_exist" = "t" ];then
+        file=$a
+        file_exist=f
+        continue
+    fi
+    new_all="$new_all $a"
+done
+
+
+if [ "$file" = "" ];then
+    echo have not config file yet
+    exit 1
+fi
+
+
+day_exist=f
+for a in $new_all;do
+    if [ $a = "-day" ];then
+        day_exist=t
+        continue
+    fi
+    if [ "$day_exist" = "t" ];then
+        echo "## $a" >> $file
+        day_exist=f
+        continue
+    fi
+    n_all="$n_all $a"
+done
+
+
+
+for a in $n_all;do
+    if [ "$next" != "p" -a "$next" != "b" -a $a != "-p" -a $a != "-d" ];then
+        echo "wrong params,should like this: ${0#*/} -p name -d one-thing another-thing"
+        exit 1
+    fi
+    if [ $a = "-p" ];then
+        next=p
+        continue
+    fi
+    if [ $a = "-d" ];then
+        next=d
+        continue
+    fi
+    if [ $next = "p" ];then
+        addperson $a
+        continue
+    fi
+    if [ $next = "d" ];then
+        adddo $a
+        continue
+    fi
+done
+
+
+echo success:
+git diff
+
